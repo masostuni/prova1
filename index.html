@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Three.js 3D Model Viewer</title>
     <style>
-        body { margin: 0; }
+        body { margin: 0; overflow: hidden; }
         canvas { display: block; }
         nav {
             position: fixed;
@@ -35,12 +35,13 @@
         <a href="pagina3.html">Pagina 3</a>
     </nav>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script>
         // Setup della scena, camera e renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
@@ -49,11 +50,14 @@
         light.position.set(1, 1, 1).normalize();
         scene.add(light);
 
+        // Aggiunta di una luce ambientale
+        const ambientLight = new THREE.AmbientLight(0x404040, 1);
+        scene.add(ambientLight);
+
         // Caricamento del modello 3D
         const loader = new THREE.GLTFLoader();
         loader.load('modello.glb', function (gltf) {
             scene.add(gltf.scene);
-            renderer.render(scene, camera);
         }, undefined, function (error) {
             console.error(error);
         });
